@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مركز صالح فون - البصرة \ قضاء الصادق</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@500;700;900&display=swap');
+        body { font-family: 'Cairo', sans-serif; }
+        .heavy-title { font-weight: 900 !important; letter-spacing: -0.5px; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-900 min-h-screen flex flex-col">
+
+    <!-- Header -->
+    <header class="bg-blue-600 text-white shadow-md sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-3.5 flex justify-between items-center">
+            <div class="flex items-center space-x-3 space-x-reverse">
+                <div class="bg-white text-blue-600 p-2.5 rounded-full font-bold shadow-md">
+                    <i class="fa-solid fa-mobile-screen-button text-xl"></i>
+                </div>
+                <div>
+                    <h1 class="text-xl heavy-title text-white drop-shadow-sm">مركز صالح فون</h1>
+                    <p class="text-xs font-bold text-blue-100">البصرة \ قضاء الصادق \ الخنياب</p>
+                </div>
+            </div>
+            <button onclick="toggleAdminModal()" class="bg-blue-700 hover:bg-blue-800 text-xs px-3.5 py-2 rounded-xl font-black transition border border-blue-400 shadow">
+                <i class="fa-solid fa-lock ml-1"></i> لوحة التحكم
+            </button>
+        </div>
+    </header>
+
+    <!-- Navigation Tabs -->
+    <nav class="bg-white shadow-sm border-b sticky top-16 z-40">
+        <div class="container mx-auto px-4 flex overflow-x-auto space-x-2 space-x-reverse py-2.5 no-scrollbar">
+            <button onclick="switchTab('chargers')" id="btn-chargers" class="tab-btn px-4 py-2 rounded-full text-sm font-black bg-blue-600 text-white whitespace-nowrap transition shadow-sm">
+                <i class="fa-solid fa-bolt ml-1"></i> الشواحن
+            </button>
+            <button onclick="switchTab('accessories')" id="btn-accessories" class="tab-btn px-4 py-2 rounded-full text-sm font-black bg-slate-100 text-slate-700 whitespace-nowrap transition">
+                <i class="fa-solid fa-headphones ml-1"></i> الاكسسوارات
+            </button>
+            <button onclick="switchTab('repair')" id="btn-repair" class="tab-btn px-4 py-2 rounded-full text-sm font-black bg-slate-100 text-slate-700 whitespace-nowrap transition">
+                <i class="fa-solid fa-screwdriver-wrench ml-1"></i> صيانة الهواتف
+            </button>
+            <button onclick="switchTab('printing')" id="btn-printing" class="tab-btn px-4 py-2 rounded-full text-sm font-black bg-slate-100 text-slate-700 whitespace-nowrap transition">
+                <i class="fa-solid fa-print ml-1"></i> طباعة واستنساخ
+            </button>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main class="container mx-auto px-4 py-6 flex-grow max-w-2xl">
+        
+        <!-- Products Section (Chargers & Accessories) -->
+        <div id="section-products">
+            <div class="flex justify-between items-center mb-4">
+                <h2 id="category-title" class="text-base heavy-title text-slate-900">قائمة الشواحن وبنوك الطاقة</h2>
+                <span id="items-count" class="text-xs font-black bg-blue-100 text-blue-800 px-2.5 py-1 rounded-full">0 منتج</span>
+            </div>
+            
+            <!-- Products Grid -->
+            <div id="products-grid" class="grid grid-cols-2 gap-3.5">
+                <!-- المنتجات يتم تعبئتها ديناميكياً -->
+            </div>
+        </div>
+
+        <!-- Repair & Maintenance Section -->
+        <div id="section-repair" class="hidden space-y-6">
+            <!-- Repair Inquiry Form -->
+            <div class="bg-white p-5 rounded-2xl shadow-sm border">
+                <h2 class="text-lg heavy-title text-slate-900 mb-2"><i class="fa-solid fa-screwdriver-wrench text-blue-600 ml-1"></i> استفسارات الصيانة والاعطال</h2>
+                <p class="text-xs font-bold text-slate-600 mb-4">استفسر عن عطل هاتفك، أسعار التبديل، أو وقت الإصلاح مباشرة مع الفني.</p>
+                
+                <form onsubmit="submitRepairInquiry(event)" class="space-y-3.5">
+                    <div>
+                        <label class="block text-xs font-black text-slate-800 mb-1">اسم الزبون الكريم:</label>
+                        <input type="text" id="repair-name" required class="w-full px-3.5 py-2.5 text-sm font-bold border rounded-xl focus:ring-2 focus:ring-blue-500 outline-none" placeholder="الاسم الكريم">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-black text-slate-800 mb-1">نوع الموبايل ورقم الجيل:</label>
+                        <input type="text" id="repair-phone-model" required class="w-full px-3.5 py-2.5 text-sm font-bold border rounded-xl focus:ring-2 focus:ring-blue-500 outline-none" placeholder="مثال: iPhone 11 Pro / Samsung A54">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-black text-slate-800 mb-1">وصف العطل أو المشكلة:</label>
+                        <textarea id="repair-desc" rows="3" required class="w-full px-3.5 py-2.5 text-sm font-bold border rounded-xl focus:ring-2 focus:ring-blue-500 outline-none" placeholder="اكتب تفاصيل العطل (شاشة مكسورة، شحن، فاصل، إلخ)..."></textarea>
+                    </div>
+                    <button type="submit" class="w-full bg-green-600 hover:bg-green-700 text-white py-3 rounded-xl text-sm font-black shadow-md transition flex items-center justify-center">
+                        <i class="fa-brands fa-whatsapp ml-2 text-lg"></i> إرسال الاستفسار عبر الواتساب
+                    </button>
+                </form>
+            </div>
+
+            <!-- Completed Repairs List -->
+            <div class="bg-white p-5 rounded-2xl shadow-sm border">
+                <div class="flex justify-between items-center mb-3">
+                    <h3 class="text-base heavy-title text-slate-900"><i class="fa-solid fa-circle-check text-green-600 ml-1"></i> الأجهزة المكتملة وجاهزة للاستلام</h3>
+                    <span id="completed-count" class="text-xs font-black bg-green-100 text-green-800 px-2.5 py-1 rounded-full">0 أجهزة</span>
+                </div>
+                <p class="text-xs text-slate-500 mb-4">قائمة الأجهزة التي تم تصليحها وإنجاز صيانتها مع الأسعار والتكاليف:</p>
+                
+                <div id="completed-repairs-grid" class="space-y-3">
+                    <!-- يتم تعبئتها ديناميكياً -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Printing & Services Section -->
+        <div id="section-printing" class="hidden">
+            <div class="bg-white p-5 rounded-2xl shadow-sm border">
+                <h2 class="text-lg heavy-title text-slate-900 mb-2"><i class="fa-solid fa-print text-blue-600 ml-1"></i> خدمة طباعة الصور والاستنساخ</h2>
+                <p class="text-xs font-bold text-slate-600 mb-4">اطلب طباعة صورك، بحوثك، أو المستندات الرسمية بكل سهولة واستلمها من المركز مباشرة.</p>
+                
+                <form onsubmit="submitPrintOrder(event)" class="space-y-3.5">
+                    <div>
+                        <label class="block text-xs font-black text-slate-800 mb-1">اسم الزبون الكريم:</label>
+                        <input type="text" id="print-name" required class="w-full px-3.5 py-2.5 text-sm font-bold border rounded-xl focus:ring-2 focus:ring-blue-500 outline-none" placeholder="الاسم الكريم">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-black text-slate-800 mb-1">رقم الهاتف:</label>
+                        <input type="tel" id="print-phone" required class="w-full px-3.5 py-2.5 text-sm font-bold border rounded-xl focus:ring-2 focus:ring-blue-500 outline-none" placeholder="07xxxxxxxxx">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-black text-slate-800 mb-1">نوع الخدمة المطلوب:</label>
+                        <select id="print-type" class="w-full px-3.5 py-2.5 text-sm font-bold border rounded-xl focus:ring-2 focus:ring-blue-500 outline-none">
+                            <option value="طباعة صور (10x15)">طباعة صور (10x15)</option>
+                            <option value="طباعة صور (A4)">طباعة صور (A4 ملون)</option>
+                            <option value="استنساخ مستندات">استنساخ مستندات (أبيض وأسود / ملون)</option>
+                            <option value="طباعة بحوث وملفات">طباعة بحوث وتقارير</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-black text-slate-800 mb-1">تفاصيل الطلب أو الملاحظات:</label>
+                        <textarea id="print-notes" rows="3" class="w-full px-3.5 py-2.5 text-sm font-bold border rounded-xl focus:ring-2 focus:ring-blue-500 outline-none" placeholder="اكتب التفاصيل (عدد النسخ، نوع الورق، إلخ)..."></textarea>
+                    </div>
+                    <button type="submit" class="w-full bg-green-600 hover:bg-green-700 text-white py-3 rounded-xl text-sm font-black shadow-md transition flex items-center justify-center">
+                        <i class="fa-brands fa-whatsapp ml-2 text-lg"></i> إرسال الطلب عبر الواتساب
+                    </button>
+                </form>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t mt-8 py-4 text-center text-xs text-slate-600">
+        <p class="heavy-title text-slate-900 text-sm">مركز صالح فون - البصرة \ قضاء الصادق \ الخنياب</p>
+        <p class="mt-1 font-bold">هاتف: 07716765972 • صيانة عامة، اكسسوارات، وخدمات طباعة</p>
+    </footer>
+
+    <!-- Admin Modal -->
+    <div id="admin-modal" class="fixed inset-0 bg-black/60 hidden z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl w-full max-w-md max-h-[90vh] overflow-y-auto p-5 shadow-2xl space-y-5">
+            <div class="flex justify-between items-center border-b pb-2">
+                <h3 class="heavy-title text-slate-900 text-sm"><i class="fa-solid fa-gears text-blue-600 ml-1"></i> لوحة تحكم المركز</h3>
+                <button onclick="toggleAdminModal()" class="text-slate-400 hover:text-slate-600 p-1"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+
+            <!-- Add Product Form -->
+            <form id="add-product-form" onsubmit="handleAddProduct(event)" class="space-y-3 bg-slate-50 p-3.5 rounded-xl border">
+                <h4 class="text-xs heavy-title text-blue-600 mb-1">إضافة منتج (شواحن / اكسسوارات)</h4>
+                <div>
+                    <input type="text" id="new-name" placeholder="اسم المنتج" required class="w-full px-3 py-2 text-xs font-bold border rounded-lg outline-none">
+                </div>
+                <div class="grid grid-cols-2 gap-2">
+                    <input type="number" id="new-price" placeholder="السعر (دينار)" required class="w-full px-3 py-2 text-xs font-bold border rounded-lg outline-none">
+                    <select id="new-category" class="w-full px-3 py-2 text-xs font-bold border rounded-lg outline-none">
+                        <option value="chargers">شواحن</option>
+                        <option value="accessories">اكسسوارات</option>
+                    </select>
+                </div>
+                <div>
+                    <input type="text" id="new-image" placeholder="رابط صورة المنتج (اختياري)" class="w-full px-3 py-2 text-xs font-bold border rounded-lg outline-none">
+                </div>
+                <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg text-xs font-black shadow">إضافة المنتج</button>
+            </form>
+
+            <!-- Add Completed Repair Form -->
+            <form id="add-repair-form" onsubmit="handleAddRepair(event)" class="space-y-3 bg-emerald-50 p-3.5 rounded-xl border border-emerald-200">
+                <h4 class="text-xs heavy-title text-emerald-700 mb-1">إضافة جهاز مكتمل الصيانة</h4>
+                <div>
+                    <input type="text" id="rep-customer" placeholder="اسم الزبون (مثال: أحمد محمد)" required class="w-full px-3 py-2 text-xs font-bold border rounded-lg outline-none">
+                </div>
+                <div>
+                    <input type="text" id="rep-model" placeholder="نوع الجهاز (مثال: Redmi Note 10)" required class="w-full px-3 py-2 text-xs font-bold border rounded-lg outline-none">
+                </div>
+                <div>
+                    <input type="text" id="rep-work" placeholder="نوع العمل (مثال: تبديل شاشة + حماية)" required class="w-full px-3 py-2 text-xs font-bold border rounded-lg outline-none">
+                </div>
+                <div>
+                    <input type="number" id="rep-cost" placeholder="تكلفة التصليح (دينار)" required class="w-full px-3 py-2 text-xs font-bold border rounded-lg outline-none">
+                </div>
+                <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-2 rounded-lg text-xs font-black shadow">نشر الجهاز المكتمل</button>
+            </form>
+
+            <!-- Current Items List -->
+            <div>
+                <h4 class="text-xs heavy-title text-slate-800 mb-2">إدارة المنتجات وأجهزة الصيانة</h4>
+                <div id="admin-items-list" class="space-y-2 max-h-40 overflow-y-auto">
+                    <!-- يتم تعبئتها ديناميكياً -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript Logic -->
+    <script>
+        const SHOP_PHONE = '9647716765972';
+
+        // Default Products Data
+        let products = JSON.parse(localStorage.getItem('saleh_phone_products')) || [
+            { id: 1, name: 'شاحن سريع جداري 25 واط أصلي', price: 15000, category: 'chargers', image: 'https://images.unsplash.com/photo-1583863788434-e58a36330cf0?w=300&q=80' },
+            { id: 2, name: 'بنك طاقة ( باور بانك ) 20,000 ملي أمبير', price: 28000, category: 'chargers', image: 'https://images.unsplash.com/photo-1609592424158-4773f6f66a6a?w=300&q=80' },
+            { id: 3, name: 'سماعة بلوتوث لاسلكية عالية الجودة', price: 20000, category: 'accessories', image: 'https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=300&q=80' },
+            { id: 4, name: 'كفر حماية سيليكون أنيق مع حماية كاميرا', price: 6000, category: 'accessories', image: 'https://images.unsplash.com/photo-1601593346740-92561b47e93c?w=300&q=80' }
+        ];
+
+        // Default Completed Repairs Data
+        let completedRepairs = JSON.parse(localStorage.getItem('saleh_phone_repairs')) || [
+            { id: 101, customer: 'علي حسين', model: 'iPhone 13', work: 'تبديل شاشة أصلية', cost: 85000, date: 'اليوم' },
+            { id: 102, customer: 'كرار جاسم', model: 'Samsung A32', work: 'صيانة ايسي شحن وتصليح مايك', cost: 25000, date: 'أمس' }
+        ];
+
+        let currentTab = 'chargers';
+
+        function saveData() {
+            localStorage.setItem('saleh_phone_products', JSON.stringify(products));
+            localStorage.setItem('saleh_phone_repairs', JSON.stringify(completedRepairs));
+        }
+
+        function switchTab(tab) {
+            currentTab = tab;
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.className = "tab-btn px-4 py-2 rounded-full text-sm font-black bg-slate-100 text-slate-700 whitespace-nowrap transition";
+            });
+            
+            document.getElementById('section-products').classList.add('hidden');
+            document.getElementById('section-repair').classList.add('hidden');
+            document.getElementById('section-printing').classList.add('hidden');
+
+            document.getElementById(`btn-${tab}`).className = "tab-btn px-4 py-2 rounded-full text-sm font-black bg-blue-600 text-white whitespace-nowrap transition shadow-sm";
+
+            if(tab === 'chargers' || tab === 'accessories') {
+                document.getElementById('section-products').classList.remove('hidden');
+                document.getElementById('category-title').innerText = tab === 'chargers' ? 'قائمة الشواحن وبنوك الطاقة' : 'قائمة اكسسوارات الموبايل';
+                renderProducts();
+            } else if(tab === 'repair') {
+                document.getElementById('section-repair').classList.remove('hidden');
+                renderCompletedRepairs();
+            } else if(tab === 'printing') {
+                document.getElementById('section-printing').classList.remove('hidden');
+            }
+        }
+
+        function renderProducts() {
+            const grid = document.getElementById('products-grid');
+            const filtered = products.filter(p => p.category === currentTab);
+            document.getElementById('items-count').innerText = `${filtered.length} منتج`;
+            
+            if(filtered.length === 0) {
+                grid.innerHTML = `<div class="col-span-2 text-center py-8 text-slate-400 text-xs font-bold">لا توجد منتجات مضافة في هذا القسم حالياً.</div>`;
+                return;
+            }
+
+            grid.innerHTML = filtered.map(p => `
+                <div class="bg-white rounded-2xl shadow-sm border p-3.5 flex flex-col justify-between">
+                    <div>
+                        <img src="${p.image || 'https://images.unsplash.com/photo-1585060544812-6b45742d762f?w=300&q=80'}" alt="${p.name}" class="w-full h-28 object-cover rounded-xl mb-2.5">
+                        <h3 class="heavy-title text-xs text-slate-900 line-clamp-2 mb-1.5">${p.name}</h3>
+                    </div>
+                    <div>
+                        <div class="text-blue-600 heavy-title text-sm mb-2.5">${Number(p.price).toLocaleString()} د.ع</div>
+                        <button onclick="orderProduct('${p.name}', ${p.price})" class="w-full bg-slate-900 hover:bg-blue-600 text-white text-xs py-2 rounded-xl font-black transition shadow-sm flex items-center justify-center">
+                            <i class="fa-brands fa-whatsapp ml-1.5 text-sm"></i> طلب المنتج
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderCompletedRepairs() {
+            const container = document.getElementById('completed-repairs-grid');
+            document.getElementById('completed-count').innerText = `${completedRepairs.length} أجهزة`;
+
+            if(completedRepairs.length === 0) {
+                container.innerHTML = `<p class="text-xs text-slate-400 text-center py-4 font-bold">لا توجد أجهزة مكتملة حالياً.</p>`;
+                return;
+            }
+
+            container.innerHTML = completedRepairs.map(r => `
+                <div class="bg-slate-50 border p-3.5 rounded-xl flex justify-between items-center">
+                    <div>
+                        <div class="flex items-center space-x-2 space-x-reverse mb-1">
+                            <span class="heavy-title text-sm text-slate-900">${r.customer}</span>
+                            <span class="text-[10px] bg-blue-100 text-blue-800 font-bold px-2 py-0.5 rounded-md">${r.model}</span>
+                        </div>
+                        <p class="text-xs text-slate-600 font-bold"><i class="fa-solid fa-wrench text-slate-400 ml-1"></i> ${r.work}</p>
+                    </div>
+                    <div class="text-left">
+                        <span class="block text-emerald-600 heavy-title text-sm">${Number(r.cost).toLocaleString()} د.ع</span>
+                        <span class="text-[10px] text-slate-400">${r.date}</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function orderProduct(name, price) {
+            const message = `مرحباً مركز صالح فون (الخنياب)، أرغب بطلب المنتج التالي:\n- ${name}\n- السعر: ${Number(price).toLocaleString()} د.ع`;
+            window.open(`https://wa.me/${SHOP_PHONE}?text=${encodeURIComponent(message)}`, '_blank');
+        }
+
+        function submitRepairInquiry(e) {
+            e.preventDefault();
+            const name = document.getElementById('repair-name').value;
+            const model = document.getElementById('repair-phone-model').value;
+            const desc = document.getElementById('repair-desc').value;
+
+            const message = `استفسار صيانة موبايل جديد:\n- الاسم: ${name}\n- نوع الجهاز: ${model}\n- العطل والمشكلة: ${desc}`;
+            window.open(`https://wa.me/${SHOP_PHONE}?text=${encodeURIComponent(message)}`, '_blank');
+        }
+
+        function submitPrintOrder(e) {
+            e.preventDefault();
+            const name = document.getElementById('print-name').value;
+            const phone = document.getElementById('print-phone').value;
+            const type = document.getElementById('print-type').value;
+            const notes = document.getElementById('print-notes').value;
+
+            const message = `طلب خدمة طباعة واستنساخ جديد:\n- الاسم: ${name}\n- الهاتف: ${phone}\n- الخدمة: ${type}\n- الملاحظات: ${notes}`;
+            window.open(`https://wa.me/${SHOP_PHONE}?text=${encodeURIComponent(message)}`, '_blank');
+        }
+
+        function toggleAdminModal() {
+            const modal = document.getElementById('admin-modal');
+            modal.classList.toggle('hidden');
+            if(!modal.classList.contains('hidden')) {
+                renderAdminList();
+            }
+        }
+
+        function handleAddProduct(e) {
+            e.preventDefault();
+            const name = document.getElementById('new-name').value;
+            const price = document.getElementById('new-price').value;
+            const category = document.getElementById('new-category').value;
+            const image = document.getElementById('new-image').value;
+
+            products.push({
+                id: Date.now(),
+                name,
+                price: Number(price),
+                category,
+                image: image.trim() !== '' ? image : undefined
+            });
+
+            saveData();
+            renderProducts();
+            renderAdminList();
+            document.getElementById('add-product-form').reset();
+            alert('تمت إضافة المنتج بنجاح!');
+        }
+
+        function handleAddRepair(e) {
+            e.preventDefault();
+            const customer = document.getElementById('rep-customer').value;
+            const model = document.getElementById('rep-model').value;
+            const work = document.getElementById('rep-work').value;
+            const cost = document.getElementById('rep-cost').value;
+
+            completedRepairs.unshift({
+                id: Date.now(),
+                customer,
+                model,
+                work,
+                cost: Number(cost),
+                date: 'اليوم'
+            });
+
+            saveData();
+            renderCompletedRepairs();
+            renderAdminList();
+            document.getElementById('add-repair-form').reset();
+            alert('تم نشر الجهاز المكتمل بنجاح!');
+        }
+
+        function deleteProduct(id) {
+            if(confirm('هل أنت متأكد من الحذف؟')) {
+                products = products.filter(p => p.id !== id);
+                saveData();
+                renderProducts();
+                renderAdminList();
+            }
+        }
+
+        function deleteRepair(id) {
+            if(confirm('هل أنت متأكد من حذف هذا الجهاز من القائمة؟')) {
+                completedRepairs = completedRepairs.filter(r => r.id !== id);
+                saveData();
+                renderCompletedRepairs();
+                renderAdminList();
+            }
+        }
+
+        function renderAdminList() {
+            const list = document.getElementById('admin-items-list');
+            
+            let prodHtml = products.map(p => `
+                <div class="flex justify-between items-center bg-white p-2.5 rounded-xl border text-xs shadow-sm">
+                    <div>
+                        <span class="heavy-title text-slate-900 block">${p.name}</span>
+                        <span class="text-blue-600 font-black">${Number(p.price).toLocaleString()} د.ع (${p.category === 'chargers' ? 'شواحن' : 'اكسسوارات'})</span>
+                    </div>
+                    <button onclick="deleteProduct(${p.id})" class="text-red-500 hover:text-red-700 p-1"><i class="fa-solid fa-trash text-sm"></i></button>
+                </div>
+            `).join('');
+
+            let repHtml = completedRepairs.map(r => `
+                <div class="flex justify-between items-center bg-emerald-50 p-2.5 rounded-xl border border-emerald-200 text-xs shadow-sm">
+                    <div>
+                        <span class="heavy-title text-slate-900 block">صيانة: ${r.customer} (${r.model})</span>
+                        <span class="text-emerald-700 font-black">${r.work} - ${Number(r.cost).toLocaleString()} د.ع</span>
+                    </div>
+                    <button onclick="deleteRepair(${r.id})" class="text-red-500 hover:text-red-700 p-1"><i class="fa-solid fa-trash text-sm"></i></button>
+                </div>
+            `).join('');
+
+            list.innerHTML = `<h5 class="font-bold text-[11px] text-slate-500 mb-1">المنتجات:</h5>` + prodHtml + `<h5 class="font-bold text-[11px] text-slate-500 mt-3 mb-1">أجهزة الصيانة المكتملة:</h5>` + repHtml;
+        }
+
+        // Initial Render
+        renderProducts();
+    </script>
+</body>
+</html>
